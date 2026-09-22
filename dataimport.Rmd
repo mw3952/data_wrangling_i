@@ -1,0 +1,71 @@
+---
+title: "Data Import"
+output: html_document
+date: "2026-09-22"
+---
+
+```{r setup}
+library(tidyverse)
+library(readxl)
+library(haven)
+```
+
+## Import FAS litters
+
+```{r}
+litters_df = read_csv(file = "./data/FAS_litters.csv", na = c(".", "NA", ""))
+litters_df = janitor::clean_names(litters_df)
+
+litters_df
+tail(litters_df, 5)
+skimr::skim(litters_df)
+```
+
+## Import FAS pups
+
+```{r}
+pups_df = read_csv(file = "./data/FAS_pups.csv", na = c(".", "NA", ""))
+pups_df = janitor::clean_names(pups_df)
+
+pups_df
+```
+
+## Other file formats
+
+```{r}
+mlb11_df = read_excel("./data/mlb11.xlsx", n_max = 20)
+head(mlb11_df, 5)
+
+pulse_df = read_sas("./data/public_pulse_data.sas7bdat")
+head(pulse_df, 5)
+```
+
+## Learning assessment: absolute vs relative paths
+
+```{r}
+pups_abs = read_csv("/Users/meherwalia/Columbia /Data Science I/data_wrangling_i/data/FAS_pups.csv")
+pups_rel = read_csv("./data/FAS_pups.csv")
+```
+
+## Learning assessment: bad column parsing
+
+```{r}
+pups_bad = read_csv(
+  "./data/FAS_pups.csv",
+  col_types = cols(`Litter Number` = col_double())
+)
+pups_bad
+```
+
+## Learning assessment: base R comparison
+
+```{r}
+pups_base = read.csv("./data/FAS_pups.csv")
+pups_base = janitor::clean_names(pups_base)
+
+class(pups_base)
+class(pups_df)
+
+pups_base$S
+pups_df$S
+```
